@@ -5,11 +5,13 @@ import {
   Get,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from '../../schemas/user.schema'; // Adjust the path accordingly
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { JwtAuthGuard } from 'src/guards/authguard';
 
 @Controller('auth')
 export class AuthController {
@@ -51,6 +53,7 @@ export class AuthController {
     return this.authService.loginUser(userInfo);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':username')
   async me(@Param('username') username: string): Promise<Partial<User | null>> {
     if (!username) {
