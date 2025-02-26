@@ -1,4 +1,11 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { User } from '../../schemas/user.schema'; // Adjust the path accordingly
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
@@ -9,7 +16,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-  ) {} // Inject AuthService
+  ) {}
 
   @Post('signup')
   async create(@Body() createUserDto: Partial<User>): Promise<User> {
@@ -42,5 +49,13 @@ export class AuthController {
       throw new BadRequestException('Invalid Username or Password');
     }
     return this.authService.loginUser(userInfo);
+  }
+
+  @Get(':username')
+  async me(@Param('username') username: string): Promise<Partial<User | null>> {
+    if (!username) {
+      throw new BadRequestException('Username Not found');
+    }
+    return this.authService.getUser(username);
   }
 }

@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -13,7 +13,13 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: '.env', // Path to the .env file
     }),
     AuthModule,
-    MongooseModule.forRoot(`mongodb://localhost:27017/attendance-db`),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URI'),
+      }),
+      inject: [ConfigService],
+    }),
     UserModule,
   ],
   controllers: [AppController],

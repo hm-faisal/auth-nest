@@ -16,14 +16,26 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  async getUser(username: string): Promise<Partial<User | null>> {
+    const user = await this.userModel.findOne({ username: username });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
+  }
+
   async create(data: Partial<User>): Promise<User> {
-    const { password } = data;
+    const { password, username } = data;
     if (!password) {
       throw new BadRequestException('Invalid Credentials');
     }
     const salt = bcrypt.genSaltSync(10);
     const hashPassword = bcrypt.hashSync(password, salt);
-    const newUser = new this.userModel({ ...data, password: hashPassword });
+    const newUser = new this.userModel({
+      ...data,
+      password: hashPassword,
+      username: username?.toLowerCase(),
+    });
     return newUser.save();
   }
 
