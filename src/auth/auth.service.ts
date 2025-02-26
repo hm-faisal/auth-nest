@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { User, UserDocument } from 'schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './jwt-payload.interface';
@@ -24,7 +24,7 @@ export class AuthService {
     return user;
   }
 
-  async create(data: Partial<User>): Promise<User> {
+  async create(data: Partial<User>): Promise<LoginResponseDto> {
     const { password, username } = data;
     if (!password) {
       throw new BadRequestException('Invalid Credentials');
@@ -36,7 +36,22 @@ export class AuthService {
       password: hashPassword,
       username: username?.toLowerCase(),
     });
-    return newUser.save();
+    const userData = await newUser.save();
+    const payload: JwtPayload = {
+      id: userData._id as ObjectId,
+      username: userData.username,
+      name: userData.name,
+      description: userData.description,
+      birthdate: userData.birthdate,
+      gender: userData.gender,
+      email: userData.email,
+      sub: userData.email,
+    };
+    return {
+      access_token: this.jwtService.sign(payload, {
+        secret: this.configService.get<string>('SECRET_KEY'),
+      }),
+    };
   }
 
   async loginUser(userData: {
@@ -56,6 +71,7 @@ export class AuthService {
     }
 
     const payload: JwtPayload = {
+      id: user._id as ObjectId,
       username: user.username,
       name: user.name,
       description: user.description,

@@ -21,7 +21,9 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async create(@Body() createUserDto: Partial<User>): Promise<User> {
+  async create(
+    @Body() createUserDto: Partial<User>,
+  ): Promise<LoginResponseDto> {
     if (
       !createUserDto.name ||
       !createUserDto.username ||

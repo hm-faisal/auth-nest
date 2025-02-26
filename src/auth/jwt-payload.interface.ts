@@ -1,4 +1,7 @@
+import { ObjectId } from 'mongoose';
+
 export interface JwtPayload {
+  id: ObjectId;
   username: string;
   name: string;
   description: string;
