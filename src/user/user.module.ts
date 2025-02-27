@@ -15,7 +15,7 @@ import { JwtAuthGuard } from 'src/guards/authguard';
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('SECRET_KEY'), // Use the secret key from .env
-        signOptions: { expiresIn: '2h' },
+        signOptions: { expiresIn: '30d' },
       }),
       inject: [ConfigService],
     }),

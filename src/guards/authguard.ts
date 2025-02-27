@@ -27,6 +27,7 @@ export class JwtAuthGuard implements CanActivate {
       const payload = this.jwtService.verify(token, {
         secret: this.configService.get<string>('SECRET_KEY'),
       });
+
       return true;
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
@@ -35,6 +36,7 @@ export class JwtAuthGuard implements CanActivate {
 
   private extractTokenFromHeader(request: Request): string | null {
     const authHeader = request.headers.authorization;
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return null;
     }
