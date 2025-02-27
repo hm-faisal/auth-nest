@@ -31,7 +31,7 @@ cd auth-nest
 
 ```bash
 $ yarn install
-````
+```
 
 ## Compile and run the project
 
@@ -58,3 +58,4 @@ $ yarn run test:e2e
 # test coverage
 $ yarn run test:cov
 ```
+````
