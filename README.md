@@ -23,14 +23,15 @@ YOLO Task is a full-stack authentication and profile management system. This rep
 
 ### 1️⃣ Clone the Repository
 
-````sh
+```sh
 git clone https://github.com/hm-faisal/auth-nest
 cd auth-nest
+```
 
 ## Project setup
 
 ```bash
-$ yarn install
+yarn install
 ```
 
 ## Compile and run the project
@@ -58,4 +59,3 @@ $ yarn run test:e2e
 # test coverage
 $ yarn run test:cov
 ```
-````
